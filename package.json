@@ -1,0 +1,27 @@
+{
+  "name": "PadoIt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc -w",
+    "start": "ts-node src/index.ts",
+    "quick": "node dist/index.js",
+    "dev": "nodemon dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^15.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "@mikro-orm/cli": "^4.5.4",
+    "@mikro-orm/core": "^4.5.4",
+    "@mikro-orm/migrations": "^4.5.4",
+    "@mikro-orm/postgresql": "^4.5.4",
+    "pg": "^8.6.0"
+  }
+}
