@@ -93,7 +93,7 @@ let UserResolver = class UserResolver {
             const hashedPassword = yield argon2_1.default.hash(options.password);
             const user = em.create(User_1.User, {
                 username: options.username,
-                password: hashedPassword
+                password: hashedPassword,
             });
             try {
                 yield em.persistAndFlush(user);
@@ -105,8 +105,8 @@ let UserResolver = class UserResolver {
                             {
                                 field: "username",
                                 message: `${options.username} already exists.`,
-                            }
-                        ]
+                            },
+                        ],
                     };
                 }
             }
@@ -115,13 +115,15 @@ let UserResolver = class UserResolver {
     }
     login(options, { em }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield em.findOne(User_1.User, { username: options.username.toLowerCase() });
+            const user = yield em.findOne(User_1.User, {
+                username: options.username.toLowerCase(),
+            });
             if (!user) {
                 return {
                     errors: [
                         {
                             field: "username",
-                            message: "That username doesn't exist."
+                            message: "That username doesn't exist.",
                         },
                     ],
                 };
@@ -132,7 +134,7 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "password",
-                            message: "Incorrect Password"
+                            message: "Incorrect Password",
                         },
                     ],
                 };
@@ -145,7 +147,7 @@ let UserResolver = class UserResolver {
 };
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg('options', () => UsernamePasswordInput)),
+    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput)),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [UsernamePasswordInput, Object]),
@@ -153,7 +155,7 @@ __decorate([
 ], UserResolver.prototype, "register", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg('options', () => UsernamePasswordInput)),
+    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput)),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [UsernamePasswordInput, Object]),

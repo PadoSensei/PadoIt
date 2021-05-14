@@ -1,14 +1,22 @@
-import { MyContext } from 'src/types';
-import { Resolver, Mutation, InputType, Field, Arg, Ctx, ObjectType } from 'type-graphql';
-import { User } from '../entities/User';
+import { MyContext } from "src/types";
+import {
+  Resolver,
+  Mutation,
+  InputType,
+  Field,
+  Arg,
+  Ctx,
+  ObjectType,
+} from "type-graphql";
+import { User } from "../entities/User";
 import argon2 from "argon2";
 
 @InputType()
 class UsernamePasswordInput {
   @Field()
-  username: string
+  username: string;
   @Field()
-  password: string
+  password: string;
 }
 
 @ObjectType()
@@ -21,21 +29,21 @@ class FieldError {
 
 @ObjectType()
 class UserResponse {
-  @Field(() => [FieldError], {nullable: true})
-  errors?: FieldError[]
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
 
-  @Field(() => User, {nullable: true})
-  user?: User 
+  @Field(() => User, { nullable: true })
+  user?: User;
 }
 
 @Resolver()
 export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options', ()=> UsernamePasswordInput) options: UsernamePasswordInput, 
+    @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
   ): Promise<UserResponse> {
-    if (options.username.length <= 2){
+    if (options.username.length <= 2) {
       return {
         errors: [
           {
@@ -46,7 +54,7 @@ export class UserResolver {
       };
     }
 
-    if (options.password.length <= 2){
+    if (options.password.length <= 2) {
       return {
         errors: [
           {
@@ -57,9 +65,9 @@ export class UserResolver {
       };
     }
     const hashedPassword = await argon2.hash(options.password);
-    const user = em.create(User, { 
+    const user = em.create(User, {
       username: options.username,
-      password: hashedPassword
+      password: hashedPassword,
     });
     try {
       await em.persistAndFlush(user);
@@ -69,11 +77,11 @@ export class UserResolver {
         return {
           errors: [
             {
-            field: "username", 
-            message: `${options.username} already exists.`,
-            }
-          ]
-        }
+              field: "username",
+              message: `${options.username} already exists.`,
+            },
+          ],
+        };
       }
     }
     return { user };
@@ -81,16 +89,18 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg('options', ()=> UsernamePasswordInput) options: UsernamePasswordInput, 
+    @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, { username: options.username.toLowerCase() })
+    const user = await em.findOne(User, {
+      username: options.username.toLowerCase(),
+    });
     if (!user) {
       return {
         errors: [
           {
-            field: "username", 
-            message: "That username doesn't exist."
+            field: "username",
+            message: "That username doesn't exist.",
           },
         ],
       };
@@ -100,15 +110,15 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: "password", 
-            message: "Incorrect Password"
+            field: "password",
+            message: "Incorrect Password",
           },
         ],
       };
     }
-  
-      return {
+
+    return {
       user,
     };
   }
-  }
+}
