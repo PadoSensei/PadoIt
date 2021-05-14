@@ -7,7 +7,8 @@
     "watch": "tsc -w",
     "start": "ts-node src/index.ts",
     "quick": "node dist/index.js",
-    "dev": "nodemon dist/index.js"
+    "dev": "nodemon dist/index.js",
+    "create:migration": "mikro-orm migration:create"
   },
   "keywords": [],
   "author": "",
