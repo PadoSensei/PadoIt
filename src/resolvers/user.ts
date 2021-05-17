@@ -7,6 +7,7 @@ import {
   Arg,
   Ctx,
   ObjectType,
+  Query,
 } from "type-graphql";
 import { User } from "../entities/User";
 import argon2 from "argon2";
@@ -38,6 +39,17 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    //console.log("session", req.session);
+    if (!req.session.userId) {
+      //console.log("nothing found");
+      return null;
+    }
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
@@ -118,7 +130,8 @@ export class UserResolver {
     }
 
     req.session.userId = user.id;
-
+    console.log(user.id);
+    console.log(req.session.userId);
     return {
       user,
     };
